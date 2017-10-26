@@ -1,4 +1,5 @@
-.page {
+/* theme1 */
+/*.page {
 	margin: 0;
 	padding: 0;
 	font-size: 0;
@@ -50,6 +51,72 @@
 
 .page li.goto a {
 	text-decoration: underline;
-	/*font-style: italic;*/
 	color: inherit;
+}
+*/
+
+.page{
+	font-family:"微软雅黑";
+	font-size: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.page li{
+	display: inline-block;
+	font-size: 12px;
+	min-width: 1.6em;
+	margin: inherit;
+	padding: 0 0.4em;
+	line-height: 2.6em;
+	height: 2.6em;
+	border: solid 1px #E0E0E0;
+	border-right: none;
+	text-align: center;
+	color: #0B90F8;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.page li:first-child {
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+}
+
+.page li:last-child {
+	border-right: solid 1px #C0C0C0;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
+
+
+.page li.first,
+.page li.last,
+.page li.prev,
+.page li.next,
+.page li.page-button{
+	cursor: pointer;
+}
+
+.page li.more,
+.page li.disabled {
+	color: #E0E0E0;
+	cursor: default;
+}
+
+.page li.first:not(.disabled):hover,
+.page li.last:not(.disabled):hover,
+.page li.prev:not(.disabled):hover,
+.page li.next:not(.disabled):hover,
+.page li.page-button:not(.current-page):hover{
+	background: #F5F5F5;
+}
+
+.page li.current-page {
+	background: #0B90F8;
+	color: #FFFFFF;
+	border: solid 1px #0B90F8;
+	border-right: none;
 }

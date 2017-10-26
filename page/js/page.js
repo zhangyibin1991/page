@@ -202,7 +202,8 @@ function Page(data){
 			// ... 2 3 4 5 6 7 8 ...
 			// ... 6 7 8 9 10 11
 			var harf = (buttonCount -1) / 2;
-			if(_this.options.currentPage < harf){
+			harf = harf == 0 ? 1 : harf;
+			if(_this.options.currentPage <= harf){
 				
 			}else if(_this.options.currentPage > _this.options.totalPage - harf){
 				from = _this.options.totalPage - buttonCount + 1;
@@ -215,7 +216,7 @@ function Page(data){
 			lis = _createPageButton.apply(_this,[from, end]);
 			var $more = $("<li/>", {"class": "more"})
 						.html(_this.options.i18n.more);
-			if(_this.options.currentPage < harf){
+			if(_this.options.currentPage <= harf){
 				lis.push($more.clone().addClass("right-more").get(0));
 			}else if(_this.options.currentPage > _this.options.totalPage - harf){
 				lis.unshift($more.clone().addClass("left-more").get(0));
@@ -433,15 +434,15 @@ function Page(data){
 			// 1 2 3 4 5 6 7...
 			// ... 2 3 4 5 6 7 8 ...
 			// ... 6 7 8 9 10 11
-			var harf = (buttonCount -1) / 2;
+			var harf = (buttonCount - 1) / 2;
 			var $more = $("<li/>", {"class": "more"})
 						.html(_this.options.i18n.more);
-			if(_this.options.currentPage <= harf){
+			if(_this.options.currentPage <= harf + 1){
 				_$ul.find(".left-more").remove();
 				if(_$ul.find(".right-more").size() == 0){
 					_$ul.find(".next").before($more.clone().addClass("right-more")[0]);
 				}
-			}else if(_this.options.currentPage > _this.options.totalPage - harf){
+			}else if(_this.options.currentPage >= _this.options.totalPage - harf){
 				from = _this.options.totalPage - buttonCount + 1;
 				end = _this.options.totalPage;
 				
