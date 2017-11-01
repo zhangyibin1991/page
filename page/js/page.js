@@ -14,7 +14,9 @@ function Page(data){
 		FIRST_END_ENABLE: true,	/* 是否显示首页和末页 */
 		
 		REQUEST_TYPE: "JSON",
-		REQUEST_URL: "#"
+		REQUEST_URL: "#",
+		
+		DEFAULT_CURRENT_PAGE_PARAM_NAME: "current-page"
 	}
 
 
@@ -60,12 +62,14 @@ function Page(data){
 		/* 是否前端分页 */
 		isFront: false,
 		/* 前端分页所持有的记录数据 */
-		data:{}
+		data:{},
+		/* FORM/AJAX请求时提交的当前页参数名 */
+		currentPageParamName: _DEFAULT_OPTIONS.DEFAULT_CURRENT_PAGE_PARAM_NAME
 	}
 	
-	this.default_param = {
-		currentPageParam: "current-page"
-	}
+//	this.default_param = {
+//		currentPageParam: "current-page"
+//	}
 	
 	_init_data= function(){
 		var _this = this;
@@ -73,8 +77,8 @@ function Page(data){
 			$.extend(true, _this.options, data.options) 
 		}
 		
-		if(data && data.params){
-			$.extend(true, _this.default_param, data.param);
+		if(data && data.param){
+			$.extend(true, _this.options.param, data.param);
 		}
 		
 		/* 判断是否前端分页 */
@@ -348,7 +352,7 @@ function Page(data){
 			return false;
 		}else{
 			var formData = {};
-				formData[_this.default_param.currentPageParam] = page;
+				formData[_this.options.currentPageParamName] = page;
 			if(_this.options.type == "JSON"){
 				// ajax请求
 				$.getJSON(_this.options.url,
@@ -368,6 +372,8 @@ function Page(data){
 						name: attr,
 						value: formData[attr]}))
 				}
+				/* add 2017/10/29 form元素如果没有添加到文档中，则会取笑提交 */
+				$(document.body).append($form);
 				$form.submit();
 				return false;
 			}
@@ -506,11 +512,15 @@ function getMessage(str, param){
 
 $.fn.page = function(options, params){
 	var default_params = {
-		totalPageDataParam: "total-page", 	/* 总的页数传递参数名，默认方式data-total-page */
-		totalRecodeDataParam: "total-recode",/* 总的记录条数参数名，默认方式data-total-recode */
-		pageSizeDataParam: "page-size",		/* 每页显示条数参数名，默认方式data-page-size */
-	
-		currentPageParam: "current-page"
+		// totalPageDataParam: "total-page", 	/* 总的页数传递参数名，默认方式data-total-page */
+		totalPageDataParam: "totalPage",
+		// totalRecodeDataParam: "total-recode",/* 总的记录条数参数名，默认方式data-total-recode */
+		totalRecodeDataParam: "totalRecode",
+		// pageSizeDataParam: "page-size",		/* 每页显示条数参数名，默认方式data-page-size */
+		pageSizeDataParam: "pageSize",
+		// currentPageDataParam: "current-page",/* 传递当前页参数吗，默认方式data-currentPage */
+		currentPageDataParam: "currentPage",
+//		currentPageParam: "current-page"
 	}
 	
 	var data = {};
@@ -518,9 +528,11 @@ $.fn.page = function(options, params){
 		data.options = options;
 	}
 	
-	if(params){
-		data.param = $.extend(true, default_params, params);
-	}
+//	if(params){
+//		data.param = $.extend(true, default_params, params);
+//	}else{
+//		data.param = {};
+//	}
 	
 	// 获取totalPageCount
 	if(!isNaN(this.data(default_params.totalPageDataParam))
@@ -543,7 +555,25 @@ $.fn.page = function(options, params){
 		&& this.data(default_params.totalRecodeDataParam) > 0){
 		data.options.totalRecode = this.data(default_params.totalRecodeDataParam);
 	}
-	data.parent = this;
+		
+	var userData = this.data();
+	var dataParam = {};
+	outer:for(var key1 in userData){
+		for(var key2 in default_params){
+			if(key1 == default_params[key2]){
+				continue outer;
+			}
+		}
+		dataParam[key1] = userData[key1];
+	}
+	
+	if(!data.options.param){
+		data.options.param = {};
+	}
+	
+	$.extend(true, data.options.param, dataParam);
+	
+	// data.parent = this;
 	var page = new Page(data);
 	var companent = page.getComponent();
 	this.append(companent);
