@@ -19,6 +19,7 @@ isFront: 是否前端分页,默认false。
 data:为前端分页时，所需要显示的所有记录。
 
 For Example：
+```Javascript
 <!DOCTYPE html>
 <html>
 	<head>
@@ -54,3 +55,4 @@ For Example：
 		<div id="show-page"></div>
 	</body>
 </html>
+```
